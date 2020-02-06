@@ -31,38 +31,10 @@ public class VehicleInsuranceTest {
   
   @Test
   void insuranceQuoteTest() {
-    webDriver.manage().window().maximize();
-    webDriver.get("http://sampleapp.tricentis.com/101/index.php");
-    
-    webDriver.findElement(By.id("nav_automobile")).click();
-    
-    Select selectMake = new Select(webDriver.findElement(By.id("make")));
-    selectMake.selectByValue("Toyota");
-    webDriver.findElement(By.id("engineperformance")).sendKeys("500");
-    webDriver.findElement(By.id("dateofmanufacture")).sendKeys("02/06/2020");
-    new Select(webDriver.findElement(By.id("numberofseats"))).selectByValue("7");
-    new Select(webDriver.findElement(By.id("fuel"))).selectByValue("Gas");
-    webDriver.findElement(By.id("listprice")).sendKeys("10000");
-    webDriver.findElement(By.id("annualmileage")).sendKeys("5000");
-    webDriver.findElement(By.id("nextenterinsurantdata")).click();
-    
-    webDriver.findElement(By.id("firstname")).sendKeys("Rickma");
-    webDriver.findElement(By.id("lastname")).sendKeys("RS");
-    webDriver.findElement(By.id("birthdate")).sendKeys("01/04/2000");
-    new Select(webDriver.findElement(By.id("country"))).selectByValue("Japan");
-    webDriver.findElement(By.id("zipcode")).sendKeys("1000004");
-    new Select(webDriver.findElement(By.id("occupation"))).selectByValue("Employee");
-    // チェックボックスをクリックするとspanタグが重なっているのでElement is not clickable at pointが発生する。JSで実行している
-    ((JavascriptExecutor) webDriver).executeScript("document.getElementById('speeding').click();");
-    webDriver.findElement(By.id("nextenterproductdata")).click();
-    
-    webDriver.findElement(By.id("startdate")).sendKeys("04/01/2020");
-    new Select(webDriver.findElement(By.id("insurancesum"))).selectByValue("10000000");
-    new Select(webDriver.findElement(By.id("meritrating"))).selectByValue("Bonus 1");
-    new Select(webDriver.findElement(By.id("damageinsurance"))).selectByValue("Partial Coverage");
-    ((JavascriptExecutor) webDriver).executeScript("document.getElementById('LegalDefenseInsurance').click();");
-    new Select(webDriver.findElement(By.id("courtesycar"))).selectByValue("No");
-    webDriver.findElement(By.id("nextselectpriceoption")).click();
+    openInsurancePage();
+    enterVehicleData();
+    enterInsurantData();
+    enterProductData();
     
     SoftAssertions priceTable = new SoftAssertions();
     priceTable.assertThat(webDriver.findElement(By.id("selectsilver_price")).getText()).as("SilverPlanの保険料").isEqualTo("299.00");
@@ -76,5 +48,45 @@ public class VehicleInsuranceTest {
     webDriver.findElement(By.id("nextsendquote")).click();
     
     assertThat(webDriver.getTitle()).as("ページタイトルの確認").isEqualTo("Send Quote");
+  }
+  
+  private void enterProductData() {
+    webDriver.findElement(By.id("startdate")).sendKeys("04/01/2020");
+    new Select(webDriver.findElement(By.id("insurancesum"))).selectByValue("10000000");
+    new Select(webDriver.findElement(By.id("meritrating"))).selectByValue("Bonus 1");
+    new Select(webDriver.findElement(By.id("damageinsurance"))).selectByValue("Partial Coverage");
+    ((JavascriptExecutor) webDriver).executeScript("document.getElementById('LegalDefenseInsurance').click();");
+    new Select(webDriver.findElement(By.id("courtesycar"))).selectByValue("No");
+    webDriver.findElement(By.id("nextselectpriceoption")).click();
+  }
+  
+  private void enterInsurantData() {
+    webDriver.findElement(By.id("firstname")).sendKeys("Rickma");
+    webDriver.findElement(By.id("lastname")).sendKeys("RS");
+    webDriver.findElement(By.id("birthdate")).sendKeys("01/04/2000");
+    new Select(webDriver.findElement(By.id("country"))).selectByValue("Japan");
+    webDriver.findElement(By.id("zipcode")).sendKeys("1000004");
+    new Select(webDriver.findElement(By.id("occupation"))).selectByValue("Employee");
+    // チェックボックスをクリックするとspanタグが重なっているのでElement is not clickable at pointが発生する。JSで実行している
+    ((JavascriptExecutor) webDriver).executeScript("document.getElementById('speeding').click();");
+    webDriver.findElement(By.id("nextenterproductdata")).click();
+  }
+  
+  private void enterVehicleData() {
+    Select selectMake = new Select(webDriver.findElement(By.id("make")));
+    selectMake.selectByValue("Toyota");
+    webDriver.findElement(By.id("engineperformance")).sendKeys("500");
+    webDriver.findElement(By.id("dateofmanufacture")).sendKeys("02/06/2020");
+    new Select(webDriver.findElement(By.id("numberofseats"))).selectByValue("7");
+    new Select(webDriver.findElement(By.id("fuel"))).selectByValue("Gas");
+    webDriver.findElement(By.id("listprice")).sendKeys("10000");
+    webDriver.findElement(By.id("annualmileage")).sendKeys("5000");
+    webDriver.findElement(By.id("nextenterinsurantdata")).click();
+  }
+  
+  private void openInsurancePage() {
+    webDriver.manage().window().maximize();
+    webDriver.get("http://sampleapp.tricentis.com/101/index.php");
+    webDriver.findElement(By.id("nav_automobile")).click();
   }
 }
